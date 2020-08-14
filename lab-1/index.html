@@ -1,46 +1,73 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<title>Lab - Multimedia Programming 2563 ITKMITL</title>
-	<link rel=stylesheet href="../src/reset.css">
-	<link rel=stylesheet href="lab.css">
-	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-</head>
-<body class="paper">
-	<div id="app">
-		<input v-model="n" type="number"> <input type="number" v-model="addRow">
-		<div class="space"></div>
-		<h3>สูตรคูณแม่ {{n}}</h3>
-		<h3 v-for="i in rowInInt(addRow)">{{n}} x {{i}} = {{x(i)}}</h3>
-		<h3>ผลลัพธ์ทั้งหมด = {{sum}}</h3>
-	</div>
+  <head>
+    <title>Lab - Multimedia Programming 2563 ITKMITL</title>
+    <link rel="stylesheet" href="lab.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Kanit:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <style>
+      body {
+        font-family: "Kanit", sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container is-fluid">
+      <div id="app">
+        <div class="columns">
+          <div class="column">
+            แม่สูตรคูณ :
+            <input class="input is-primary" v-model="n" type="number" />
+          </div>
+          <div class="column">
+            Row :
+            <input class="input is-primary" type="number" v-model="addRow" />
+          </div>
+        </div>
+        <div class="space"></div>
+        <div class="card is-offset-1 radius" style='background-color: bisque;'>
+          <div class="card-content is-offset-1">
+            <h1>สูตรคูณแม่ {{n}}</h1>
+			<h3 v-for="i in rowInInt(addRow)">{{n}} x {{i}} = {{x(i)}}</h3>
+			<h3>ผลลัพธ์ทั้งหมด = {{sum}}</h3>
+		</div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-	<script>
-		let app = new Vue({
-			el: '#app',
-			data: {
-				n: 2,
-				addRow: 1
-			},
-			methods: {
-				x: function(row){
-					return this.n * row
-				},
-				rowInInt: function(num){
-					return parseInt(num)
-				}
-			},
-			computed :{
-				sum: function() {
-					let total = 0;
-					for (let multi = 0;multi < this.addRow;multi++){
-						total += this.n * (multi + 1)
-					}
-					return total
-				}
-
-			}
-		})
-	</script>
-</body>
+    <script>
+      let app = new Vue({
+        el: "#app",
+        data: {
+          n: 2,
+          addRow: 1,
+        },
+        methods: {
+          x: function (row) {
+            return this.n * row;
+          },
+          rowInInt: function (num) {
+            return parseInt(num);
+          },
+        },
+        computed: {
+          sum: function () {
+            let total = 0;
+            for (let multi = 0; multi < this.addRow; multi++) {
+              total += this.n * (multi + 1);
+            }
+            return total;
+          },
+        },
+      });
+    </script>
+  </body>
 </html>
