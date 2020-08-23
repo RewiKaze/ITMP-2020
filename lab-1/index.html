@@ -32,12 +32,13 @@
           </div>
         </div>
         <div class="space"></div>
-        <div class="card is-offset-1 radius" style='background-color: bisque;'>
+        <div
+          class="card is-offset-1 has-text-centered"
+          style="background-color: bisque;">
           <div class="card-content is-offset-1">
-            <h1>สูตรคูณแม่ {{n}}</h1>
-			<h3 v-for="i in rowInInt(addRow)">{{n}} x {{i}} = {{x(i)}}</h3>
-			<h3>ผลลัพธ์ทั้งหมด = {{sum}}</h3>
-		</div>
+            <h1 class="is-size-4">สูตรคูณแม่ {{n}}</h1>
+            <h3 class="is-size-5" v-for="i in rowInInt(addRow)">{{n}} x {{i}} = {{x(i)}}</h3>
+            <h3 class="is-size-4">ผลลัพธ์ทั้งหมด = {{sum}}</h3>
           </div>
         </div>
       </div>

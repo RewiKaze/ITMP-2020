@@ -1,38 +1,109 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<title>The Members - ITKMITL Multimedia Programming 2563</title>
+  <head>
+    <title>The Members - ITKMITL Multimedia Programming 2563</title>
 
-	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-	<link rel="stylesheet" type="text/css" href="lab.css">
-</head>
-<body>
-	<div id="app">
-		
-	</div>
-	
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" type="text/css" href="lab.css" />
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div id="app">
+        <h3>Class List in FFXIV :</h3>
+        <div class="row">
+          <div class="col-sm-12 col-md-3">
+            <div v-for="classFF in classes" @click="arraySkill(`https://xivapi.com${classFF.Url}`)">
+              <img :src="`https://xivapi.com${classFF.Icon}`" width="30px" />
+              {{classFF.Name | capitalize}}
+            </div>
+          </div>
+          <div style="background-color: lightblue;" class="col-9">
+            <!--Content Skill when click class-->
+            <div v-for="skill in skillList">
+              {{showSkill(skill)}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-	<script>
-		fetch('https://jsonplaceholder.typicode.com/users')
-		.then(response => response.json())
-		.then(json => {console.log(json)})
-		let app = new Vue({
-			el: '#app',
-			data: {
-				users :[],
-				person:{
-					id:0,
-					name:'..loading',
-					username:'..loading',
-					email:'..loading',
-					website:'..loading',
-					company:{
-						name : '..loading',
-					}
-				}	
-			}
-		})
-
-	</script>
-</body>
+    <script>
+      //@click="arraySkill(classFF.ID)"
+      // fetch("https://jsonplaceholder.typicode.com/users")
+      //   .then((response) => response.json())
+      //   .then((json) => {
+      //     app.users = json;
+      //   });
+      fetch("https://xivapi.com/ClassJob", { mode: "cors" })
+        .then((response) => response.json())
+        .then((data) => {
+          app.classes = data.Results;
+          // console.info(data.Results);
+        });
+        //v-bind:id="https://xivapi.com/ClassJob/classFF.ID"
+      let app = new Vue({
+        el: "#app",
+        // data:{
+        //   address:"https://xivapi.com/ClassJob/"
+        // },
+        methods: {
+          arraySkill: function (url) {
+            fetch(url, { mode: "cors" })
+              .then((response) => response.json())
+              .then((data) => {
+                this.skillList = data.GameContentLinks.Action.ClassJob;
+                // console.info(data.Results);
+              });
+          },
+          showSkill: function(number){
+            fetch('https://xivapi.com/Action/'+number, { mode: "cors" })
+              .then((response) => response.json())
+              .then((data) => {
+                console.log(data.Name_en)
+                // console.info(data.Results);
+                return (`<div>${ data.Name_en }</div>`)
+              });
+          }
+        },
+        filters: {
+          capitalize: function (value) {
+            if (!value) return "";
+            value = value.toString();
+            return value.charAt(0).toUpperCase() + value.slice(1);
+          },
+        },
+        data: {
+          classes: [],
+          skillList: [9, 15, 16, 17, 20, 21, 23, 24, 28, 7381],
+          // person: {
+          //   id: 0,
+          //   name: "..loading",
+          //   username: "..loading",
+          //   email: "..loading",
+          //   website: "..loading",
+          //   company: {
+          //     name: "..loading",
+          //   },
+          // },
+        },
+      });
+    </script>
+  </body>
 </html>
