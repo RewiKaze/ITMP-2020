@@ -54,13 +54,15 @@
           check: function (e) {
 			  if (e == this.pick){
 				this.correct();
+			  }else{
+				  this.pick = rand(1,this.row * this.row)
 			  }
             console.log(e);
             //ทำให้เช็คก่อนว่าถูกมั้ย
           },
           correct: function () {
             //เข้าด่านต่อไป
-            this.row = rand(2, 6);
+            this.row += 1;
             this.pick = rand(1, this.row * this.row); //แก้ให้ถูก
 			this.score += 1
             console.log("Correct!");
