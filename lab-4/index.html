@@ -8,12 +8,14 @@
   </head>
   <body>
     <div id="canvas">
+      <div class="front visible" id="front" @click="start"><h1>Click to Start</h1></div>
       <section id="canvas_header">
         <div>เหลือเวลา {{time}} วินาที</div>
       </section>
       <section id="canvas_main">
         <main>
-          <a-dot
+          <div
+            class="a-dot"
             v-for="i in row*row"
             :style="{
 				'--row':row,
@@ -22,7 +24,7 @@
 			}"
             :data-pick="i == pick"
             @click="check(i)"
-          ></a-dot>
+          ></div>
         </main>
       </section>
       <section id="canvas_footer">
@@ -31,56 +33,66 @@
     </div>
 
     <script>
-           let picklight = "80%"; //เลือกว่ารอบนี้ อันพิเศษจะมีความสว่าง 20%
-         //   document.registerElement("a-dot"); //ให้ vue รู้จัก a-dot
+      let picklight = "80%"; //เลือกว่ารอบนี้ อันพิเศษจะมีความสว่าง 20%
+      //document.registerElement("a-dot"); //ให้ vue รู้จัก a-dot
 
-           function rand(start, stop) {
-             //สร้างฟังก์ชัน random ไว้ใช้
-             let shift = stop - start + 1;
-             return Math.floor((Math.random() * 100) % shift) + start;
-           }
-      //   Vue.component('a-dot',{/*----*/})
-           let app = new Vue({
-             el: "#canvas",
-             data: {
-               row: 2, //จำนวนแถวที่จะมีในรอบนี้
-               h: 200, // hue ในรอบนี้
-               time: 20, //เวลาเริ่มต้น
-               score: 0, //คะแนนเริ่มต้น
-               pick: 1, //หมายเลขวงกลมที่จะสีแตกต่างจากก้อนอื่นๆ
-               l: 50, //ความสว่างของสีทั่วไปในรอบนี้
-             },
-             methods: {
-               check: function (e) {
-      		  if (e == this.pick){
-      			this.correct();
-      		  }else{
-      			  this.pick = rand(1,this.row * this.row)
-      		  }
-                 console.log(e);
-                 //ทำให้เช็คก่อนว่าถูกมั้ย
-               },
-               correct: function () {
-                 //เข้าด่านต่อไป
-                 this.row += 1;
-                 this.pick = rand(1, this.row * this.row); //แก้ให้ถูก
-      		this.score += 1
-                 console.log("Correct!");
-               },
-             },
-           });
-           //ทำให้แคนวาสมี --picklight ตามที่กำหนดไว้ข้างบนนี้
-           document
-             .querySelector("#canvas")
-             .style.setProperty("--picklight", picklight); //ก็อปไปใช้อีกทีตอนแรนดอมเข้าด่านใหม่ได้
+      function rand(start, stop) {
+        //สร้างฟังก์ชัน random ไว้ใช้
+        let shift = stop - start + 1;
+        return Math.floor((Math.random() * 100) % shift) + start;
+      }
+      Vue.component("a-dot");
+      let app = new Vue({
+        el: "#canvas",
 
-           let counter = setInterval(() => {
-             if (app.time > 0) {
-               app.time--;
-             } else {
-               clearInterval(counter);
-             }
-           }, 1000);
+        data: {
+          row: 2, //จำนวนแถวที่จะมีในรอบนี้
+          h: rand(1,360), // hue ในรอบนี้
+          time: 20, //เวลาเริ่มต้น
+          score: 0, //คะแนนเริ่มต้น
+          pick: 0, //หมายเลขวงกลมที่จะสีแตกต่างจากก้อนอื่นๆ
+          l: 50, //ความสว่างของสีทั่วไปในรอบนี้
+        },
+        methods: {
+          check: function (e) {
+            this.h = rand(1,360)
+            if (e == this.pick) {
+              this.correct();
+            } else {
+              this.pick = rand(1, this.row * this.row);
+            }
+            console.log(e);
+            //ทำให้เช็คก่อนว่าถูกมั้ย
+          },
+          correct: function () {
+            //เข้าด่านต่อไป
+            this.row += 1;
+            this.pick = rand(1, this.row * this.row); //แก้ให้ถูก
+            this.score += 1;
+            console.log("Correct!");
+          },
+          start: function () {
+            let counter = setInterval(() => {
+              if (app.time > 0) {
+                app.time--;
+              } else {
+                clearInterval(counter);
+                document.getElementById('front').classList.add("visible");
+                document.getElementById('front').innerHTML = "Your score is " + this.score + ". <br><div style='font-size:0.3em'> Click again to restart </div>"
+              }
+            }, 1000);
+            document.getElementById("front").classList.remove("visible");
+            this.row = 2
+            this.time = 20
+            this.score = 0
+            this.pick = rand(1,4)
+          },
+        },
+      });
+      //ทำให้แคนวาสมี --picklight ตามที่กำหนดไว้ข้างบนนี้
+      document
+        .querySelector("#canvas")
+        .style.setProperty("--picklight", picklight); //ก็อปไปใช้อีกทีตอนแรนดอมเข้าด่านใหม่ได้
     </script>
   </body>
 </html>
