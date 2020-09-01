@@ -1,80 +1,84 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<title>Color Game - Multimedia Programming 2563 ITKMITL</title>
-	<link rel="stylesheet" type="text/css" href="../src/reset.css">
-	<link rel="stylesheet" type="text/css" href="lab.css">
-	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-</head>
-<body>
-	<div id="canvas">
-		<section id="canvas_header">
-			<div>
-				เหลือเวลา {{time}} วินาที
-			</div>
-		</section>
-		<section id="canvas_main">
-			<main>
-				<a-dot v-for="i in row*row"
-				:style="{
+  <head>
+    <title>Color Game - Multimedia Programming 2563 ITKMITL</title>
+    <link rel="stylesheet" type="text/css" href="../src/reset.css" />
+    <link rel="stylesheet" type="text/css" href="lab.css" />
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  </head>
+  <body>
+    <div id="canvas">
+      <section id="canvas_header">
+        <div>เหลือเวลา {{time}} วินาที</div>
+      </section>
+      <section id="canvas_main">
+        <main>
+          <a-dot
+            v-for="i in row*row"
+            :style="{
 				'--row':row,
 				'--h':h,
 				'--l':l+'%',
 			}"
-				:data-pick="i == pick"
-				@click="check"
-				></a-dot>
-			</main>
-		</section>
-		<section id="canvas_footer">
-			<div>
-				{{score}} คะแนน
-			</div>
-		</section>
-	</div>
+            :data-pick="i == pick"
+            @click="check(i)"
+          ></a-dot>
+        </main>
+      </section>
+      <section id="canvas_footer">
+        <div>{{score}} คะแนน</div>
+      </section>
+    </div>
 
-	<script>
-		let picklight = "80%" //เลือกว่ารอบนี้ อันพิเศษจะมีความสว่าง 20%
-		document.registerElement('a-dot') //ให้ vue รู้จัก a-dot
+    <script>
+      let picklight = "80%"; //เลือกว่ารอบนี้ อันพิเศษจะมีความสว่าง 20%
+      document.registerElement("a-dot"); //ให้ vue รู้จัก a-dot
 
-		function rand(start,stop){//สร้างฟังก์ชัน random ไว้ใช้
-			let shift = (stop-start)+1
-			return Math.floor(Math.random()*100%shift)+start
-		}
+      function rand(start, stop) {
+        //สร้างฟังก์ชัน random ไว้ใช้
+        let shift = stop - start + 1;
+        return Math.floor((Math.random() * 100) % shift) + start;
+      }
 
-		let app = new Vue({
-			el:'#canvas',
-			data:{
-				row:2, //จำนวนแถวที่จะมีในรอบนี้
-				h:200, // hue ในรอบนี้
-				time:20, //เวลาเริ่มต้น
-				score:0, //คะแนนเริ่มต้น
-				pick:1, //หมายเลขวงกลมที่จะสีแตกต่างจากก้อนอื่นๆ
-				l:50,//ความสว่างของสีทั่วไปในรอบนี้
-			},
-			methods: {
-				check: function(e){
-					console.log(e)
-					//ทำให้เช็คก่อนว่าถูกมั้ย
-				},
-				correct: function(){
-					//เข้าด่านต่อไป
-					this.row = rand(2,6)
-					this.pick = rand(1,6) //แก้ให้ถูก
-					console.log('Correct!')
-				}
-			}
-		})
-		//ทำให้แคนวาสมี --picklight ตามที่กำหนดไว้ข้างบนนี้
-		document.querySelector('#canvas').style.setProperty('--picklight',picklight);//ก็อปไปใช้อีกทีตอนแรนดอมเข้าด่านใหม่ได้
-		
-		let counter = setInterval(()=>{
-			if (app.time>0) {
-				app.time--
-			}else{
-				clearInterval(counter)
-			}
-		},1000);
-	</script>
-</body>
+      let app = new Vue({
+        el: "#canvas",
+        data: {
+          row: 2, //จำนวนแถวที่จะมีในรอบนี้
+          h: 200, // hue ในรอบนี้
+          time: 20, //เวลาเริ่มต้น
+          score: 0, //คะแนนเริ่มต้น
+          pick: 1, //หมายเลขวงกลมที่จะสีแตกต่างจากก้อนอื่นๆ
+          l: 50, //ความสว่างของสีทั่วไปในรอบนี้
+        },
+        methods: {
+          check: function (e) {
+			  if (e == this.pick){
+				this.correct();
+			  }
+            console.log(e);
+            //ทำให้เช็คก่อนว่าถูกมั้ย
+          },
+          correct: function () {
+            //เข้าด่านต่อไป
+            this.row = rand(2, 6);
+            this.pick = rand(1, this.row * this.row); //แก้ให้ถูก
+			this.score += 1
+            console.log("Correct!");
+          },
+        },
+      });
+      //ทำให้แคนวาสมี --picklight ตามที่กำหนดไว้ข้างบนนี้
+      document
+        .querySelector("#canvas")
+        .style.setProperty("--picklight", picklight); //ก็อปไปใช้อีกทีตอนแรนดอมเข้าด่านใหม่ได้
+
+      let counter = setInterval(() => {
+        if (app.time > 0) {
+          app.time--;
+        } else {
+          clearInterval(counter);
+        }
+      }, 1000);
+    </script>
+  </body>
 </html>
