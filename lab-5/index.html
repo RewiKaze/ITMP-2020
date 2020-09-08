@@ -9,7 +9,7 @@
   <body>
     <div id="canvas">
       <section id="canvas_header">
-        <div>{{score}} แสดงคะแนน</div>
+        <div>Your score: {{score}}</div>
       </section>
       <section id="canvas_main" :data-play="play">
         <main>
@@ -20,7 +20,12 @@
             :data-isrightarrow="isRightArrow"
           ></div>
 
-          <div class="box _fruit" :data-pst="f.pst" v-for="f in fruits" :data-type="f.type"></div>
+          <div
+            class="box _fruit"
+            :data-pst="f.pst"
+            v-for="f in fruits"
+            :data-type="f.type"
+          ></div>
 
           <div class="box _origin"></div>
           <div class="box _12" data-pst="12"></div>
@@ -40,7 +45,6 @@
       }
 
       let nextFruidId = 3;
-    //   let isRightArrow = 1;
       let speed = 1000;
       let app = new Vue({
         el: "#canvas",
@@ -51,37 +55,59 @@
           turn: 0,
           score: 0,
           fruits: [
-            { id: 1, type: "red", pst: 5, run: true, step: 1 },
+            { id: 1, type: "red", pst: 1, run: true, step: 1 },
             { id: 2, type: "yellow", pst: 2, run: true, step: 1 },
           ],
         },
         methods: {
           swap: function () {
-			console.log('check')
-			if(this.isRightArrow == 1){
-				this.isRightArrow = 0
-			}else{
-				this.isRightArrow = 1
-			}
+            if (this.isRightArrow == 1) {
+              this.isRightArrow = 0;
+            } else {
+              this.isRightArrow = 1;
+            }
           },
         },
         computed: {},
         watch: {
-          turn: function() {
+          turn: function () {
             for (let f in this.fruits) {
-              let run = this.fruits[f].run;
-              if (run) {
+              if (this.fruits[f].run) {
                 this.fruits[f].pst += this.fruits[f].step;
               }
-			  if (this.isRightArrow == 1 && this.fruits[f].pst == 10){
-				this.fruits[f].step = 3
-			  }
-			  if(this.fruits[f].pst == 12 || this.fruits[f].pst == 16){
-				  this.fruits[f].run = false
-			  }
-              // console.log(this.fruits[f])
+              if (this.isRightArrow == 1 && this.fruits[f].pst == 11) {
+				this.fruits[f].pst = 13
+                this.fruits[f].step = 3;
+              }
+              if (this.fruits[f].pst == 12 || this.fruits[f].pst == 16) {
+				if (this.fruits[f].type == 'red' && this.fruits[f].pst == 12 && this.fruits[f].run == true){
+					this.score++
+					this.fruits[f].run = false
+				}
+				else if (this.fruits[f].type == 'yellow' && this.fruits[f].pst == 16 && this.fruits[f].run == true){
+					this.score++
+					this.fruits[f].run = false
+				}else if(this.fruits[f].pst == 12 && this.fruits[f].type == "yellow"){
+              	  clearInterval(playing)
+				  this.play= false
+                }else if(this.fruits[f].pst == 16 && this.fruits[f].type == "red"){
+              	  clearInterval(playing)
+					this.play= false
+                }
+              }  
             }
+			if (rand(1,10) % 2 == 0){
+				if(rand(1,10)%2 == 0){
+					this.fruits.push({id: nextFruidId,type:'red',pst: 1,run:true,step:1})
+				}else{
+					this.fruits.push({id: nextFruidId,type:'yellow',pst: 1,run:true,step:1})
+				}
+				nextFruidId++
+			}
           },
+		  score:function(){
+			  this.speed += 500
+		  }
         },
       });
 
