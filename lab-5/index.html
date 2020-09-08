@@ -34,7 +34,7 @@
       </section>
       <section id="canvas_footer">
         <div v-if="play" class="btn" id="toggle" @click="swap()">Toggle</div>
-        <div v-if="!play" class="btn" id="endgame">End Game</div>
+        <div v-if="!play" class="btn" id="endgame" @click='restart'>End Game</div>
       </section>
     </div>
 
@@ -67,6 +67,9 @@
               this.isRightArrow = 1;
             }
           },
+		  restart(){
+			location.reload();
+		  }
         },
         computed: {},
         watch: {
