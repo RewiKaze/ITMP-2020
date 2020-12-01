@@ -39,17 +39,20 @@
               {{classFF.Name | capitalize}}
             </div>
           </div>
-          <div style="background-color: lightblue; height: 55vw; overflow-y: scroll;" class="col-9 d-flex justify-content-center align-items-center">
+          <div style="background-color: lightblue; height: 55vw; overflow-y: scroll;" class="col-9">
             <!--Content Skill when click class-->
-            <div v-if='load == true' class="spinner-border" role="status">
-              <span class="sr-only">Loading...</span>
-            </div>
-            <div class='row'>
-            <div v-if='load == false'>
-              <div v-for="skill in skillName" class="col-3">
-              {{skill}} <br>
+            <div v-if='load == true' class="d-flex justify-content-center align-items-center h-100">
+              <div  class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
               </div>
             </div>
+            <div v-if='load == false'>
+              <div class="row" style="margin-top:1vw;">
+              <div v-for="skill in skillName" style="margin-bottom:1vw;" class="col-3">
+                <img :src="`https://xivapi.com${skill[1]}`">
+              {{skill[0]}} <br>
+              </div>
+              </div>
             </div>
           </div>
         </div>
@@ -100,24 +103,28 @@
               setTimeout(()=>{
                 for(var y = posArray; y <= posArray + 8 ; y++){
                   if (arrayInput[y] == undefined){
+                    this.load = false
                     break;
+
                   }
-                  console.log(arrayInput[y])
+                  // console.log(arrayInput)
+                  // console.log(arrayInput[0],y)
                    fetch('https://xivapi.com/Action/'+ arrayInput[y], { mode: "cors" })
               .then((response) => response.json())
               .then((data) => {
                 console.log(data.Name_en)
-                this.skillName.push(data.Name_en);
+                this.skillName.push([data.Name_en,data.Icon]);
                 });
               } 
-              if (x == Math.ceil(perLoop) + 1) {
-                  this.load = false
-                  console.log("Success")
-                }else{
-                  console.log(x,Math.ceil(perLoop))
-                }
+              // if (x == Math.ceil(perLoop) + 1) {
+                  
+              //     console.log("Success")
+              //   }else{
+              //     console.log(x,Math.ceil(perLoop))
+              //   }
+                posArray += 9
               },second)
-              posArray += 9
+              
               second += 4000
               
             }
